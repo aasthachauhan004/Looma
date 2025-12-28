@@ -37,7 +37,6 @@ function Login({ onSwitchToSignup }) {
 
     setLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       setLoading(false);
       console.log("Login:", { email, password });
@@ -49,7 +48,6 @@ function Login({ onSwitchToSignup }) {
     if (field === "email") setEmail(value);
     if (field === "password") setPassword(value);
 
-    // Clear error when user types
     if (errors[field]) {
       setErrors({ ...errors, [field]: "" });
     }
@@ -111,7 +109,7 @@ function Login({ onSwitchToSignup }) {
         </label>
         <input
           type='password'
-          placeholder='••••••••'
+          placeholder='enter-password'
           value={password}
           onChange={(e) => handleChange("password", e.target.value)}
           style={{
