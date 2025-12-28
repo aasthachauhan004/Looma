@@ -79,7 +79,7 @@ function Login({ onSwitchToSignup }) {
             border: `1px solid ${errors.email ? colors.error : colors.border}`,
             borderRadius: "8px",
             fontSize: "16px",
-            color: colors.text,
+            color: colors.textSecondary,
           }}
         />
         {errors.email && (
@@ -116,12 +116,12 @@ function Login({ onSwitchToSignup }) {
             width: "100%",
             padding: "12px 16px",
             backgroundColor: colors.bgLight,
+            color: colors.textSecondary,
             border: `1px solid ${
               errors.password ? colors.error : colors.border
             }`,
             borderRadius: "8px",
             fontSize: "16px",
-            color: colors.text,
           }}
         />
         {errors.password && (

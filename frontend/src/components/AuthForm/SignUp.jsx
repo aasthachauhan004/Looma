@@ -68,7 +68,7 @@ function Signup({ onSwitchToLogin }) {
     border: `1px solid ${errors[fieldName] ? colors.error : colors.border}`,
     borderRadius: "8px",
     fontSize: "16px",
-    color: colors.text,
+    color: colors.textSecondary,
   });
 
   const labelStyle = {
@@ -76,7 +76,7 @@ function Signup({ onSwitchToLogin }) {
     marginBottom: "8px",
     fontSize: "14px",
     fontWeight: "500",
-    color: colors.text,
+    color: colors.textSecondary,
   };
 
   const inputGroupStyle = {
