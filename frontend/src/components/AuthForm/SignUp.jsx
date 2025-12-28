@@ -6,7 +6,6 @@ function Signup({ onSwitchToLogin }) {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -28,10 +27,6 @@ function Signup({ onSwitchToLogin }) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
     }
 
     return newErrors;
@@ -90,7 +85,6 @@ function Signup({ onSwitchToLogin }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Name */}
       <div style={inputGroupStyle}>
         <label style={labelStyle}>Full Name</label>
         <input
@@ -109,7 +103,6 @@ function Signup({ onSwitchToLogin }) {
         )}
       </div>
 
-      {/* Email */}
       <div style={inputGroupStyle}>
         <label style={labelStyle}>Email</label>
         <input
@@ -128,12 +121,11 @@ function Signup({ onSwitchToLogin }) {
         )}
       </div>
 
-      {/* Password */}
       <div style={inputGroupStyle}>
         <label style={labelStyle}>Password</label>
         <input
           type='password'
-          placeholder='••••••••'
+          placeholder='enter-password'
           value={formData.password}
           onChange={(e) => handleChange("password", e.target.value)}
           style={inputStyle("password")}
@@ -147,26 +139,6 @@ function Signup({ onSwitchToLogin }) {
         )}
       </div>
 
-      {/* Confirm Password */}
-      <div style={inputGroupStyle}>
-        <label style={labelStyle}>Confirm Password</label>
-        <input
-          type='password'
-          placeholder='••••••••'
-          value={formData.confirmPassword}
-          onChange={(e) => handleChange("confirmPassword", e.target.value)}
-          style={inputStyle("confirmPassword")}
-        />
-        {errors.confirmPassword && (
-          <p
-            style={{ color: colors.error, fontSize: "14px", marginTop: "4px" }}
-          >
-            {errors.confirmPassword}
-          </p>
-        )}
-      </div>
-
-      {/* Submit Button */}
       <button
         type='submit'
         disabled={loading}

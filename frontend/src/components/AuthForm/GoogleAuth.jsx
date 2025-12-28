@@ -36,8 +36,18 @@ function GoogleAuth() {
           e.target.style.borderColor = colors.border;
         }}
       >
-        <span style={{ fontSize: "18px", fontWeight: "bold" }}>G</span>
-        <span>Continue with Google</span>
+        <span
+          style={{
+            fontSize: "18px",
+            fontWeight: "bold",
+            color: colors.textSecondary,
+          }}
+        >
+          G
+        </span>
+        <span style={{ color: colors.textSecondary }}>
+          Continue with Google
+        </span>
       </button>
 
       {/* Divider */}
