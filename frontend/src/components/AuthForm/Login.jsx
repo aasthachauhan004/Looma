@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { colors } from "../../styles/colors";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabaseClient";
 
 function Login({ onSwitchToSignup }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
@@ -25,7 +28,7 @@ function Login({ onSwitchToSignup }) {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = validateForm();
@@ -36,20 +39,59 @@ function Login({ onSwitchToSignup }) {
     }
 
     setLoading(true);
+    setErrors({});
 
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error("Login error:", error);
+
+        // User-friendly error messages
+        if (
+          error.message.includes("Invalid login credentials") ||
+          error.message.includes("Invalid") ||
+          error.status === 400
+        ) {
+          setErrors({
+            form: "Invalid email or password. Please check your credentials and try again.",
+          });
+        } else if (error.message.includes("Email not confirmed")) {
+          setErrors({ form: "Please confirm your email before signing in." });
+        } else {
+          setErrors({
+            form: error.message || "Login failed. Please try again.",
+          });
+        }
+        setLoading(false);
+      } else if (data.session && data.user) {
+        // Successful login
+        console.log("Login successful:", data.user);
+        navigate("/dashboard");
+      } else {
+        setErrors({ form: "Login failed. Please try again." });
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setErrors({ form: "An unexpected error occurred. Please try again." });
       setLoading(false);
-      console.log("Login:", { email, password });
-      alert("Login successful!");
-    }, 1500);
+    }
   };
 
   const handleChange = (field, value) => {
     if (field === "email") setEmail(value);
     if (field === "password") setPassword(value);
 
+    // Clear errors when user types
     if (errors[field]) {
       setErrors({ ...errors, [field]: "" });
+    }
+    if (errors.form) {
+      setErrors({ ...errors, form: "" });
     }
   };
 
@@ -79,7 +121,7 @@ function Login({ onSwitchToSignup }) {
             border: `1px solid ${errors.email ? colors.error : colors.border}`,
             borderRadius: "8px",
             fontSize: "16px",
-            color: colors.text,
+            color: colors.textSecondary,
           }}
         />
         {errors.email && (
@@ -116,12 +158,12 @@ function Login({ onSwitchToSignup }) {
             width: "100%",
             padding: "12px 16px",
             backgroundColor: colors.bgLight,
+            color: colors.textSecondary,
             border: `1px solid ${
               errors.password ? colors.error : colors.border
             }`,
             borderRadius: "8px",
             fontSize: "16px",
-            color: colors.text,
           }}
         />
         {errors.password && (

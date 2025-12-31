@@ -1,15 +1,28 @@
 import { colors } from "../../styles/colors";
+import { useState } from "react";
+import { supabase } from "../../supabaseClient";
 
-function GoogleAuth() {
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-    // TODO: Implement Google OAuth
+function GoogleAuth({ onUser }) {
+  const [loading, setLoading] = useState(false);
+
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/dashboard` },
+    });
+    if (error) {
+      console.error("Google sign-in error:", error.message);
+      alert(`Google sign-in failed: ${error.message}`);
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <button
-        onClick={handleGoogleLogin}
+        onClick={signInWithGoogle}
+        disabled={loading}
         style={{
           width: "100%",
           padding: "12px",
@@ -46,7 +59,7 @@ function GoogleAuth() {
           G
         </span>
         <span style={{ color: colors.textSecondary }}>
-          Continue with Google
+          {loading ? "Redirecting…" : "Continue with Google"}
         </span>
       </button>
 
