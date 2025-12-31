@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { colors } from "../../styles/colors";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabaseClient";
 
 function Signup({ onSwitchToLogin }) {
   const [formData, setFormData] = useState({
@@ -9,6 +11,7 @@ function Signup({ onSwitchToLogin }) {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
@@ -32,7 +35,7 @@ function Signup({ onSwitchToLogin }) {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = validateForm();
@@ -43,13 +46,62 @@ function Signup({ onSwitchToLogin }) {
     }
 
     setLoading(true);
+    setErrors({});
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.name,
+          },
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+      if (error) {
+        console.error("Signup error:", error);
+
+        // User-friendly error messages
+        if (
+          error.message.includes("already registered") ||
+          error.message.includes("already been registered")
+        ) {
+          setErrors({
+            form: "This email is already registered. Please sign in instead.",
+          });
+        } else if (error.message.includes("Password")) {
+          setErrors({
+            form: "Password is too weak. Please use a stronger password.",
+          });
+        } else {
+          setErrors({
+            form: error.message || "Signup failed. Please try again.",
+          });
+        }
+        setLoading(false);
+      } else if (data.user) {
+        // User created successfully
+        console.log("Signup successful:", data.user);
+
+        // Since email confirmation is disabled, user should be logged in automatically
+        if (data.session) {
+          // User is logged in, redirect to dashboard
+          navigate("/dashboard");
+        } else {
+          // No session created (shouldn't happen with confirmation disabled)
+          alert("Account created! Please sign in.");
+          onSwitchToLogin();
+        }
+      } else {
+        setErrors({ form: "Signup failed. Please try again." });
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setErrors({ form: "An unexpected error occurred. Please try again." });
       setLoading(false);
-      console.log("Signup:", formData);
-      alert("Signup successful!");
-    }, 1500);
+    }
   };
 
   const handleChange = (field, value) => {
