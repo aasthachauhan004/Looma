@@ -5,15 +5,17 @@ import {
   faHome,
   faFolder,
   faVideo,
-  faSyncAlt,
   faUsers,
   faChartBar,
   faCog,
   faTrash,
   faUser,
+  faSignOut,
 } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 const Sidebar = ({ user, onLogout }) => {
+  const [showSignOut, setShowSignout] = useState(false);
   const sidebarStyle = {
     width: "260px",
     backgroundColor: colors.bgLight,
@@ -138,7 +140,6 @@ const Sidebar = ({ user, onLogout }) => {
         <MenuItem icon={faHome} text='Home' />
         <MenuItem icon={faFolder} text='All Projects' />
         <MenuItem icon={faVideo} text='Video Templates' />
-        <MenuItem icon={faSyncAlt} text='Auto-update' />
         <MenuItem icon={faUsers} text='Team' />
         <MenuItem icon={faChartBar} text='Analytics' />
 
@@ -153,22 +154,45 @@ const Sidebar = ({ user, onLogout }) => {
         {/* Trial Banner */}
         <div style={trialBannerStyle}>
           <div style={{ fontWeight: "600", marginBottom: "4px" }}>
-            Trial expires in 6 days
+            Free Trial expires soon
           </div>
-          <div style={{ fontSize: "12px", opacity: 0.9 }}>
-            Upgrade your plan
-          </div>
+          <div style={{ fontSize: "12px", opacity: 0.9 }}>Update to PRO</div>
         </div>
 
         {/* User Profile */}
-        <button style={userProfileStyle} onClick={onLogout}>
+        {showSignOut && (
+          <button
+            style={{
+              ...userProfileStyle,
+              padding: "6px 12px",
+              fontSize: "12px",
+              backgroundColor: colors.bgCard,
+              marginBottom: "8px",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+            onClick={onLogout}
+          >
+            <FontAwesomeIcon
+              icon={faSignOut}
+              size='sm'
+              style={{ color: colors.textLight }}
+            />
+            <span>Sign Out</span>
+          </button>
+        )}
+        <button
+          style={userProfileStyle}
+          onClick={() => setShowSignout((prev) => !prev)}
+        >
           <div style={avatarStyle}>{userName.charAt(0).toUpperCase()}</div>
           <div style={{ flex: 1, overflow: "hidden" }}>
             <div
               style={{
                 fontSize: "14px",
                 fontWeight: "500",
-                color: colors.text,
+                color: colors.textSecondary,
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
