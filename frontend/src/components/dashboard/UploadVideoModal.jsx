@@ -1,12 +1,14 @@
 import { useState, useRef } from "react";
 import { colors } from "../../styles/colors";
 import { FaUpload, FaTimes, FaSpinner } from "react-icons/fa";
+import { useProjects } from "../../context/ProjectContext";
 
 function UploadVideoModal({ isOpen, onClose }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("");
+  const { addProject } = useProjects();
   const fileInputRef = useRef(null);
 
   if (!isOpen) return null;
@@ -56,6 +58,8 @@ function UploadVideoModal({ isOpen, onClose }) {
       const formData = new FormData();
       formData.append("video", selectedFile);
 
+      setProgress(30);
+      setStatus("Processing video...");
       // Upload to backend
       const response = await fetch("http://localhost:3000/api/upload-video", {
         method: "POST",
@@ -68,6 +72,19 @@ function UploadVideoModal({ isOpen, onClose }) {
 
       const data = await response.json();
       console.log("Upload response:", data);
+
+      setProgress(80);
+      setStatus("Finalizing...");
+
+      addProject({
+        id: Date.now().toString(),
+        title: selectedFile.name.replace(/\.[^/.]+$/, ""),
+        videoPath: data.videoPath,
+        audioPath: data.audioPath,
+        transcription: data.transcription,
+        thumbnail: null,
+        createdAt: new Date().toISOString(),
+      });
 
       setStatus("Video uploaded successfully!");
       setProgress(100);

@@ -8,6 +8,7 @@ export const colors = {
   backgroundCard: "#1F2937",
   text: "#f3f3f3ff",
   textSecondary: "#4c6888ff",
+  textDark: "#153079",
   border: "#374151",
   success: "#10B981",
   warning: "#F59E0B",

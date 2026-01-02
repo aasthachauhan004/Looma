@@ -13,8 +13,10 @@ import {
   faSignOut,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Sidebar = ({ user, onLogout }) => {
+const Sidebar = ({ user, onLogout, currentPage = "home" }) => {
+  const navigate = useNavigate();
   const [showSignOut, setShowSignout] = useState(false);
   const sidebarStyle = {
     width: "260px",
@@ -37,7 +39,7 @@ const Sidebar = ({ user, onLogout }) => {
     marginBottom: "8px",
     borderRadius: "8px",
     cursor: "pointer",
-    color: active ? colors.text : colors.textLight,
+    color: colors.text,
     backgroundColor: active ? colors.primary : "transparent",
     fontSize: "14px",
     fontWeight: "500",
@@ -50,7 +52,7 @@ const Sidebar = ({ user, onLogout }) => {
   const sectionTitleStyle = {
     fontSize: "12px",
     fontWeight: "600",
-    color: colors.textLight,
+    color: colors.text,
     textTransform: "uppercase",
     marginTop: "24px",
     marginBottom: "12px",
@@ -104,7 +106,7 @@ const Sidebar = ({ user, onLogout }) => {
     color: colors.text,
   };
 
-  const MenuItem = ({ icon, text, active = true, onClick }) => (
+  const MenuItem = ({ icon, text, active = false, onClick }) => (
     <button
       style={menuItemStyle(active)}
       onClick={onClick}
@@ -137,8 +139,18 @@ const Sidebar = ({ user, onLogout }) => {
 
       {/* Menu Items */}
       <div style={menuSectionStyle}>
-        <MenuItem icon={faHome} text='Home' />
-        <MenuItem icon={faFolder} text='All Projects' />
+        <MenuItem
+          icon={faHome}
+          text='Home'
+          active={currentPage === "home"}
+          onClick={() => navigate("/dashboard")}
+        />
+        <MenuItem
+          icon={faFolder}
+          text='All Projects'
+          active={currentPage === "projects"}
+          onClick={() => navigate("/all-projects")}
+        />
         <MenuItem icon={faVideo} text='Video Templates' />
         <MenuItem icon={faUsers} text='Team' />
         <MenuItem icon={faChartBar} text='Analytics' />

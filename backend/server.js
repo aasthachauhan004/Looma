@@ -1,9 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-require("dotenv").config();
 
 const { extractAudioFromVideo } = require("./utils/videoProcessor");
 const { transcribeAudio } = require("./utils/deepgramService");
@@ -73,13 +73,19 @@ app.post("/api/upload-video", upload.single("video"), async (req, res) => {
     const transcription = await transcribeAudio(audioPath);
 
     // Generate new audio
-    const generatedAudioPath = await generateAudio(transcription.text);
+    let generatedAudioPath;
+    try {
+      generatedAudioPath = await generateAudio(transcription.text);
+    } catch (err) {
+      console.error("Error generating audio:", err);
+      generatedAudioPath = null; // fallback
+    }
 
     res.json({
       success: true,
-      videoPath: req.file.filename,
+      videoPath: `/uploads/${req.file.filename}`,
       transcription: transcription.text,
-      audioPath: path.basename(generatedAudioPath),
+      audioPath: generatedAudioPath ? path.basename(generatedAudioPath) : null,
       message: "Video processed successfully",
     });
   } catch (error) {
