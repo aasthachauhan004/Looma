@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import AllProjects from "./pages/AllProjects";
+import { ProjectsProvider } from "./context/ProjectContext";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -68,6 +70,15 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path='/all-projects'
+        element={
+          <ProtectedRoute>
+            <AllProjects />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path='/' element={<Navigate to='/auth' replace />} />
     </Routes>
   );
@@ -77,7 +88,9 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRoutes />
+        <ProjectsProvider>
+          <AppRoutes />
+        </ProjectsProvider>
       </AuthProvider>
     </BrowserRouter>
   );

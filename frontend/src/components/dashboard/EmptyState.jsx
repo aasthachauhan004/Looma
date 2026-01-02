@@ -115,27 +115,6 @@ function EmptyState({ onNewVideo }) {
       <p style={subtitleStyle}>
         Create your first video project to get started with Looma
       </p>
-
-      <div style={actionsContainerStyle}>
-        <ActionCard
-          icon={FaVideo}
-          title='Record Screen'
-          description='Turn a screen recording into a studio-quality video and a step-by-step article'
-          onClick={onNewVideo}
-        />
-        <ActionCard
-          icon={FaUpload}
-          title='Upload a Video'
-          description='Upload a screen recording. Get a studio-style video'
-          onClick={onNewVideo}
-        />
-        <ActionCard
-          icon={FaFileImage}
-          title='Upload a Slide Deck'
-          description='Turn any PDF or PPT into a narrated video'
-          onClick={onNewVideo}
-        />
-      </div>
     </div>
   );
 }
