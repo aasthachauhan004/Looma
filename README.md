@@ -17,11 +17,8 @@
 - [Installation](#installation)
 - [Running the Project](#running-the-project)
 - [Project Structure](#project-structure)
-- [API Documentation](#api-documentation)
 - [Design Decisions](#design-decisions)
 - [Environment Variables](#environment-variables)
-- [Troubleshooting](#troubleshooting)
-- [Future Enhancements](#future-enhancements)
 
 ---
 
