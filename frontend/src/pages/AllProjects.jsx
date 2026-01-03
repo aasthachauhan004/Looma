@@ -8,7 +8,7 @@ import Sidebar from "../components/dashboard/Sidebar";
 import TopBar from "../components/dashboard/TopBar";
 import EmptyState from "../components/dashboard/EmptyState";
 import UploadVideoModal from "../components/dashboard/UploadVideoModal";
-import ProjectCard from "../components/Dashboard/ProjectCard";
+import ProjectCard from "../components/dashboard/ProjectCard";
 import { useState } from "react";
 
 function AllProjects() {
